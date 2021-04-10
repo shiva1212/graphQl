@@ -1,20 +1,30 @@
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
-import ApolloClient from 'apollo-boost';
-import { ApolloProvider } from 'react-apollo';
-import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
+import {ApolloProvider,HttpLink, ApolloClient, InMemoryCache,} from '@apollo/client'
 import './index.css';
 import App from './App';
 
-const client = new ApolloClient({
+
+const graphQLink = new HttpLink({
   uri: 'https://spacexdata.herokuapp.com/graphql',
 });
 
+const cache = new InMemoryCache();
+
+const client = new ApolloClient({
+  link: graphQLink,
+  cache,
+  credentials: "include",
+  resolvers:{}
+})
+
 ReactDOM.render(
+  <React.StrictMode>
   <ApolloProvider client={client}>
-    <ApolloHooksProvider client={client}>
+    
       <App />
-    </ApolloHooksProvider>
-  </ApolloProvider>,
+    
+  </ApolloProvider>
+  </React.StrictMode>,
   document.getElementById('root'),
 );
